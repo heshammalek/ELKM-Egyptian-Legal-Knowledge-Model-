@@ -181,7 +181,15 @@ def build_document(
     engine: str
 ) -> Dict[str, Any]:
     """يبني المستند النهائي"""
-    parsed = parse_legal_text(full_text)
+    
+    from scripts.grammar import parse_legal_text  # ← أضف الاستيراد هنا
+    
+    # استخدم النص المطبّع بدل الخام
+    normalized_text = normalize_arabic(full_text)
+
+    print("  📊 تحليل النص بالـ Grammar...")        # ← أضف هذه السطر
+    parsed = parse_legal_text(normalized_text)
+    print(f"    ✅ استخرج {parsed['statistics']['total_articles']} مادة")  # ← أضف هذه السطر
     
     return {
         "doc_id": law_id,
@@ -201,6 +209,7 @@ def build_document(
         "articles": parsed["articles"],
         "grammar_stats": parsed["statistics"]
     }
+
 
 
 # ════════════════════════════════════════════════════════
